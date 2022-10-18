@@ -4,6 +4,38 @@ This is a [multi-party computation](https://en.wikipedia.org/wiki/Secure_multi-p
 
 This protocol is described in a [forthcoming paper](https://eprint.iacr.org/2017/1050). It produces parameters for an adaptation of [Jens Groth's 2016 pairing-based proving system](https://eprint.iacr.org/2016/260) using the [BLS12-381](https://github.com/ebfull/pairing/tree/master/src/bls12_381) elliptic curve construction. The security proof relies on a randomness beacon being applied at the end of the ceremony.
 
+## Filecoin Mainnet Phase1
+
+Filecoin's Mainnet phase1 used `m = 27` (configured in [`src/lib.rs`](./src/lib.rs)), i.e. generated `2^27` powers-of-tau.
+
+```
+$ git clone https://github.com/DrPeterVanNostrand/powersoftau.gitL
+$ git checkout filecoin-mainnet
+
+# Generate initial parameters; writes `challenge` file:
+$ cargo run --release --bin new
+
+# First participant received `challenge` file and transforms parameters; writes `response` file:
+$ cargo run --release --bin compute
+[participant randomly presses keyboard, then presses ENTER]
+
+# First participant's response is verified (requires `challenge` and `response` files); writes `new_challenge` file:
+$ cargo run --release --bin verify_transformed
+$ mv new_challenge challenge
+
+# Second participant receives `challenge` file and makes their contribution.
+$ cargo run --release --bin compute
+
+# Second participant's contribution is verified:
+$ cargo run --release --bin verify_transform
+
+# Repeat for contribution and verification process for all participants.
+# ...
+
+# Run phase1.5; writes `phase1radix2m0, ..., phase1radix2m27` files:
+$ cargo run --release --bin create_lagrange
+```
+
 ## Instructions
 
 If you've been asked to participate, you were sent a `challenge` file. Put that in the current directory and use your [Rust toolchain](https://www.rust-lang.org/en-US/) to execute the computation:

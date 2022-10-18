@@ -210,7 +210,7 @@ fn main() {
     let worker = &Worker::new();
 
     // Create the parameters for various 2^m circuit depths.
-    for m in 27..28  {
+    for m in 0..=M {
         let paramname = format!("phase1radix2m{}", m);
         println!("Creating {}", paramname);
 
