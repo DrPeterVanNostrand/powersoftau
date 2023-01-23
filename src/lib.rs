@@ -710,7 +710,7 @@ fn merge_pairs<G: CurveAffine>(v1: &[G], v2: &[G]) -> (G, G)
 
 /// Construct a single pair (s, s^x) for a vector of
 /// the form [1, x, x^2, x^3, ...].
-fn power_pairs<G: CurveAffine>(v: &[G]) -> (G, G)
+pub fn power_pairs<G: CurveAffine>(v: &[G]) -> (G, G)
 {
     merge_pairs(&v[0..(v.len()-1)], &v[1..])
 }
@@ -739,7 +739,7 @@ fn test_power_pairs() {
 }
 
 /// Checks if pairs have the same ratio.
-fn same_ratio<G1: CurveAffine>(
+pub fn same_ratio<G1: CurveAffine>(
     g1: (G1, G1),
     g2: (G1::Pair, G1::Pair)
 ) -> bool
